@@ -48,5 +48,4 @@ def traverse_DP(coordinate):
             if coordinate not in energy:
                 energy[coordinate] = getEnergy(coordinate)
             pathEn[coordinate] = energy[coordinate]+min[0],([coordinate]+min[1])
-     
-        return pathEn[coordinate]
+    return pathEn[coordinate]
