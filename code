@@ -1,0 +1,52 @@
+# matrix 
+energy ={}# coordinate is key entry is energy 
+pathEn ={}# coordinate is key entry is tuple min energy to bottom,path
+
+#for every point in top row traverse to find lowest energy path
+#return min energy path 
+def best_seam(self):
+    min_path=()# path energy,minimum path 
+    for i in range(matrix_width):
+        current_path = traverse_DP(i,0)
+        if min_path == ():
+            min_path = current_path
+        elif min_path[0] > current_path[0]:
+            min_path = current_path
+    return min_path[1]
+
+#dynamic programming traverse 
+# while recursing fill up energy dic and pathEn dic
+#if we are at the last row return the energy and coordinate 
+#else check each possible route for min route and return energy and path
+#returns a tuple (min energy from coordinate to bottom),(path in array)
+def traverse_DP(coordinate):
+    if coordinate not in pathEn:
+        if coordinate[1] == matrix_length:
+            if coordinate not in energy:
+                energy[coordinate] = getEnergy(coordinate)
+            pathEn[coordinate]=energy[coordinate],coordinate
+            return pathEn[coordinate]
+        else:
+            if (coordinate[0],coordinate[1]+1) not in pathEn:
+                    min = traverse(coordinate[0],coordinate[1]+1)
+            else:  min = pathEn[(coordinate[0],coordinate[1]+1)]
+                # directly under point
+            if coordinate[0] != 0:
+                if (coordinate[0]-1,coordinate[1]+1) not in pathEn:
+                    look_ahead = traverse(coordinate[0]-1,coordinate[1]+1)
+                else: look_ahead = pathEn[(coordinate[0]-1,coordinate[1]+1)]
+                    if min[0] > look_ahead[0]:
+                        min = look_ahead
+                # lower left point 
+            if coordinate[0] != matrix_width:
+                if (coordinate[0]+1,coordinate[1]+1) not in pathEn:
+                    look_ahead = traverse(coordinate[0]+1,coordinate[1]+1)
+                else:look_ahead = pathEn[(coordinate[0]+1,coordinate[1]+1)]
+                    if min[0] > look_ahead[0]:
+                        min = look_ahead
+                # lower right point 
+            if coordinate not in energy:
+                energy[coordinate] = getEnergy(coordinate)
+            pathEn[coordinate] = energy[coordinate]+min[0],([coordinate]+min[1])
+     
+        return pathEn[coordinate]
